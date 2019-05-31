@@ -1,0 +1,60 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+}
+
+// delete 任务
+task cleanDir(type: Delete) {
+    delete "build/"
+}
+
+// delete 任务
+task clearJar(type: Delete) {
+    delete 'build/libs/library.jar'
+}
+
+// make jar 任务
+task makeJar(type: org.gradle.api.tasks.bundling.Jar) {
+    //打好的jar位于build/libs
+    //指定生成的jar名
+    baseName 'library'
+    //需要打包的class文件路径，该路径需要经过主project编译才可以生成
+    from('build/intermediates/classes/debug/com/example/mylibrary')
+    //打包到jar后的目录结构
+    into('com/example/mylibrary')
+    //去掉不需要打包的目录和文件
+    exclude('R.class')
+    //exclude('BuildConfig.class')
+    //去掉R开头的文件,不知道为什么？
+    //exclude {
+    //    it.name.startsWith('R')
+    //}
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
