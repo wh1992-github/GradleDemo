@@ -1,4 +1,18 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
+
+//从androidManifest.xml中获取版本号
+def getVersionNameFromManifest() {
+    def manifestParser = new com.android.builder.core.DefaultManifestParser()
+    return manifestParser.getVersionName(android.sourceSets.main.manifest.srcFile)
+}
+
+//获取时间戳
+def getTime() {
+    return new SimpleDateFormat("yyMMddHH").format(new Date())
+//    return new Date().format("yyyy-MM-dd-HH-mm-ss")
+}
 
 android {
     compileSdkVersion 26
@@ -22,16 +36,28 @@ android {
         }
     }
 
+    //修改生成的apk名字
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            //versionName,buildType.name,versionCode,编译时间
+            def fileName = "${variant.versionName}_" + "${variant.buildType.name}_" + getTime() + "_V" + "${variant.versionCode}_" + ".apk"
+            def outFile = output.outputFile
+            if (outFile != null && outFile.name.endsWith('.apk')) {
+                outputFileName = fileName
+            }
+        }
+    }
+
     productFlavors {
         common {
             applicationId "com.example.wh.myapplication.common"
-            versionCode 1
-            versionName "common-1.0"
+            versionCode Integer.valueOf(getTime())
+            versionName "common"
         }
         normal {
             applicationId "com.example.wh.myapplication.normal"
-            versionCode 1
-            versionName "normal-1.0"
+            versionCode Integer.valueOf(getTime())
+            versionName "normal"
         }
     }
 

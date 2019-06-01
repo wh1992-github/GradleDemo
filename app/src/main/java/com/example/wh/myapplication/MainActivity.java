@@ -24,12 +24,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn:
-                Log.i(TAG, "onClick: btn");
                 try {
                     PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    Log.i(TAG, "onClick: pkgName = " + getPackageName());
                     Log.i(TAG, "onClick: name = " + info.versionName + ", code = " + info.versionCode);
-                    Log.i(TAG, "onClick: app name = "+getString(R.string.app_name));
-                    Log.i(TAG, "onClick: app name = "+getString(R.string.app_name2));
+                    Log.i(TAG, "onClick: app1 = " + getString(R.string.app_name)+", app2 = " + getString(R.string.app_name2));
                     new Test().print();
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
