@@ -11,9 +11,8 @@ def getVersionNameFromManifest() {
 //获取时间戳
 def getTime() {
     return new SimpleDateFormat("yyMMddHH").format(new Date())
-//    return new Date().format("yyyy-MM-dd-HH-mm-ss")
+//    return new Date().format("yyyyMMddHHmmss")
 }
-
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -40,7 +39,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             //versionName,buildType.name,versionCode,编译时间
-            def fileName = "${variant.versionName}_" + "${variant.buildType.name}_" + getTime() + "_V" + "${variant.versionCode}_" + ".apk"
+            def fileName = "${variant.versionName}_" + "${variant.buildType.name}_" + getTime() + "_V" + "${variant.versionCode}" + ".apk"
             def outFile = output.outputFile
             if (outFile != null && outFile.name.endsWith('.apk')) {
                 outputFileName = fileName
@@ -51,21 +50,26 @@ android {
     productFlavors {
         common {
             applicationId "com.example.wh.myapplication.common"
-            versionCode Integer.valueOf(getTime())
+            manifestPlaceholders = [package_name: "com.example.wh.myapplication.common",
+                                    APP_NAME    : "@string/app_name"]
             versionName "common"
+            versionCode Integer.valueOf(getTime())
         }
         normal {
             applicationId "com.example.wh.myapplication.normal"
-            versionCode Integer.valueOf(getTime())
+            manifestPlaceholders = [package_name: "com.example.wh.myapplication.normal",
+                                    APP_NAME    : "@string/app_name"]
             versionName "normal"
+            versionCode Integer.valueOf(getTime())
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
 // copy 任务
 task copyApk(type: Copy) {
     from("build/outputs/apk/common/debug/app-common-debug.apk")
