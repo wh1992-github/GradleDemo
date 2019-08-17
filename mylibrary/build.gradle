@@ -28,28 +28,22 @@ task cleanDir(type: Delete) {
     delete "build/"
 }
 
-// delete 任务
-task clearJar(type: Delete) {
+task exportJar(type: Copy) {
+    //必须先删除旧的包，否则新包不会生成，这个目录对应mylibrary/build/libs/AndroidUtils.jar
     delete 'build/libs/library.jar'
+    //生成的目录在这里
+    from('build/intermediates/packaged-classes/release/')
+    //生成build/libs目录，并将build/intermediates/packaged-classes/release/下的classes.jar复制到此目录
+    into('build/libs/')
+    //指定我们只在build/intermediates/packaged-classes/release/下寻找classes.jar,放入到build/libs/目录
+    include('classes.jar')
+    //重命名下，起个个性的名字，不要与别人混淆
+    rename('classes.jar', 'library.jar')
 }
 
-// make jar 任务
-task makeJar(type: org.gradle.api.tasks.bundling.Jar) {
-    //打好的jar位于build/libs
-    //指定生成的jar名
-    baseName 'library'
-    //需要打包的class文件路径，该路径需要经过主project编译才可以生成
-    from('build/intermediates/classes/debug/com/example/mylibrary')
-    //打包到jar后的目录结构
-    into('com/example/mylibrary')
-    //去掉不需要打包的目录和文件
-    exclude('R.class')
-    //exclude('BuildConfig.class')
-    //去掉R开头的文件,不知道为什么？
-    //exclude {
-    //    it.name.startsWith('R')
-    //}
-}
+//这里会触发真正对mylibaray的编译
+exportJar.dependsOn(build)
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
