@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "whdemo--MainActivity";
     private Button mBtn;
 
@@ -16,11 +16,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mBtn = (Button) findViewById(R.id.btn);
-        mBtn.setOnClickListener(this);
+        mBtn = findViewById(R.id.btn);
+        mBtn.setOnClickListener(this::onClick);
     }
 
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn:
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
                     Log.i(TAG, "onClick: pkgName = " + getPackageName());
                     Log.i(TAG, "onClick: name = " + info.versionName + ", code = " + info.versionCode);
-                    Log.i(TAG, "onClick: app1 = " + getString(R.string.app_name)+", app2 = " + getString(R.string.app_name2));
+                    Log.i(TAG, "onClick: name = " + getString(R.string.app_name) + ", label = " + getString(R.string.label_name));
                     new Test().print();
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="app_name2">My Application2</string>
+    <string name="label_name">一个测试App</string>
 </resources>
