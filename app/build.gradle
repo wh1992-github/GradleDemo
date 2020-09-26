@@ -12,7 +12,7 @@ def getVersionNameFromManifest() {
 
 //获取时间戳
 def getTime() {
-    return new SimpleDateFormat("yyMMddHH").format(new Date())
+    return new SimpleDateFormat("yyyyMMdd").format(new Date())
 //   return new Date().format("yyyyMMddHHmmss")
 }
 

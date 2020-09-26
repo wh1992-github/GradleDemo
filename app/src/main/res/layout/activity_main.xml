@@ -9,10 +9,17 @@
     tools:context="com.example.wh.myapplication.MainActivity">
 
     <Button
-        android:id="@+id/btn"
+        android:id="@+id/btn1"
         android:layout_width="wrap_content"
-        android:layout_marginBottom="100dp"
         android:layout_height="wrap_content"
-        android:text="点击添加" />
+        android:layout_marginTop="10dp"
+        android:text="点击测试" />
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="点击library" />
 
 </LinearLayout>

@@ -23,12 +23,17 @@ android {
     }
 }
 
+def releaseTime() {
+    return new Date().format("yyMMddHHmmss", TimeZone.getTimeZone("UTC"))
+}
+
 // delete 任务
 task cleanDir(type: Delete) {
     delete "build/"
 }
 
 task exportJar(type: Copy) {
+    def fileName = "Manager${android.defaultConfig.versionName}_${releaseTime()}"
     //必须先删除旧的包，否则新包不会生成，这个目录对应mylibrary/build/libs/AndroidUtils.jar
     delete 'build/libs/library.jar'
     //生成的目录在这里
@@ -38,12 +43,26 @@ task exportJar(type: Copy) {
     //指定我们只在build/intermediates/packaged-classes/release/下寻找classes.jar,放入到build/libs/目录
     include('classes.jar')
     //重命名下，起个个性的名字，不要与别人混淆
-    rename('classes.jar', 'library.jar')
+    rename('classes.jar', "${fileName}.jar")
 }
-
 //这里会触发真正对mylibaray的编译
 exportJar.dependsOn(build)
 
+//Android Studio 4.0 生成 jar
+task makeJar(type: Copy) {
+    def fileName = "Jar_${android.defaultConfig.versionName}_${releaseTime()}"
+    //删除存在的
+    delete 'target/'
+    //设置拷贝的文件  (重中之重)
+    from('build/intermediates/full_jar/debug/createFullJarDebug/full.jar')
+    //打进jar包后的文件目录
+    into('target/')
+    //将classes.jar放入build/libs/目录下
+    //include ,exclude参数来设置过滤
+    include('full.jar')
+    //重命名
+    rename('full.jar', "${fileName}.jar")
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
