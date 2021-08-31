@@ -1,10 +1,9 @@
 package com.example.wh.myapplication;
 
-import android.util.Log;
-
 public class Test {
+    private static final String TAG = "Test";
 
     public void print() {
-        Log.i("whdemo--Test", "print: Common ");
+        LogUtil.i(TAG, "print: Common ");
     }
 }
