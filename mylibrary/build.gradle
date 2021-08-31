@@ -25,11 +25,11 @@ android {
 }
 
 def releaseTime() {
-    return new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("UTC"))
+    return new Date().format("yyyyMMdd-HH:mm:ss", TimeZone.getTimeZone("UTC"))
 }
 
-// delete 任务
-task cleanDir(type: Delete) {
+//delete
+task deleteDir(type: Delete) {
     delete "build/"
 }
 
@@ -38,15 +38,20 @@ task exportJar(type: Copy) {
     def fileName = "Jar_${android.defaultConfig.versionName}_${releaseTime()}"
     //删除存在的
     delete 'targetJar/'
-    //设置拷贝的文件 (重中之重)
-    from('build/intermediates/full_jar/debug/createFullJarDebug/full.jar')
+    //设置拷贝的文件(重中之重)
+    from('build/intermediates/packaged-classes/debug/classes.jar')
     //打进jar包后的文件目录
     into('targetJar/')
-    //将classes.jar放入build/libs/目录下
-    //include ,exclude参数来设置过滤
-    include('full.jar')
+    //include参数来设置过滤,classes.jar文件
+    //include('classes.jar')
     //重命名
-    rename('full.jar', "${fileName}.jar")
+    rename('classes.jar', "${fileName}.jar")
+
+    fileName = "Aar_${android.defaultConfig.versionName}_${releaseTime()}"
+    from("build/outputs/aar/mylibrary-debug.aar")
+    into("targetJar/")
+    //重命名
+    rename('mylibrary-debug.aar', "${fileName}.aar")
 }
 
 //这里会触发真正对mylibaray的编译

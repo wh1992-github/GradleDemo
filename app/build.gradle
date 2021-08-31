@@ -46,16 +46,16 @@ android {
     }
 
     //修改生成的apk名字
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            //versionName,buildType.name,versionCode,编译时间
-            def fileName = "${variant.versionName}_" + "${variant.buildType.name}_" + getTime() + "_V" + "${variant.versionCode}" + ".apk"
-            def outFile = output.outputFile
-            if (outFile != null && outFile.name.endsWith('.apk')) {
-                outputFileName = fileName
-            }
-        }
-    }
+//    applicationVariants.all { variant ->
+//        variant.outputs.all { output ->
+//            //versionName,buildType.name,versionCode,编译时间
+//            def fileName = "${variant.versionName}_" + "${variant.buildType.name}_" + getTime() + "_V" + "${variant.versionCode}" + ".apk"
+//            def outFile = output.outputFile
+//            if (outFile != null && outFile.name.endsWith('.apk')) {
+//                outputFileName = fileName
+//            }
+//        }
+//    }
 
     productFlavors {
         common {
@@ -81,6 +81,15 @@ android {
     buildToolsVersion '30.0.3'
 }
 
+def releaseTime() {
+    return new Date().format("yyyyMMdd-HH:mm:ss", TimeZone.getTimeZone("UTC"))
+}
+
+//delete
+task deleteDir(type: Delete) {
+    delete "build/"
+}
+
 //copy 任务
 task copyApk(type: Copy) {
     //删除存在的
@@ -88,23 +97,19 @@ task copyApk(type: Copy) {
     from("build/outputs/apk/common/debug/app-common-debug.apk")
     into("targetApk/")
     //重命名
-    rename('app-common-debug.apk', "common.apk")
+    rename('app-common-debug.apk', "common_${releaseTime()}.apk")
 
     from("build/outputs/apk/normal/debug/app-normal-debug.apk")
     into("targetApk/")
     //重命名
-    rename('app-normal-debug.apk', "normal.apk")
-}
-
-task deleteApk(type: Delete) {
-    delete "build"
+    rename('app-normal-debug.apk', "normal_${releaseTime()}.apk")
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
     implementation files('src/main/libs/Jar_1.0_20210831090439.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
