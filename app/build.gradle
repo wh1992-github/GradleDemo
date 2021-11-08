@@ -28,9 +28,6 @@ android {
         versionName "1.0"
         flavorDimensions "versionName"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        //library多渠道编译
-        missingDimensionStrategy "versionLib", "commonLib"
-        missingDimensionStrategy "versionLib", "normalLib"
     }
     sourceSets {
         main {
@@ -68,6 +65,8 @@ android {
                                     APP_NAME    : "@string/app_name"]
             versionName "common"
             versionCode Integer.valueOf(getTime())
+            //library多渠道编译:重新定义此属性，动态的获取lib module的当前flavor
+            missingDimensionStrategy "versionLib", "commonLib"
         }
         normal {
             applicationId "com.example.wh.myapplication.normal"
@@ -75,6 +74,8 @@ android {
                                     APP_NAME    : "@string/app_name"]
             versionName "normal"
             versionCode Integer.valueOf(getTime())
+            //library多渠道编译:重新定义此属性，动态的获取lib module的当前flavor
+            missingDimensionStrategy "versionLib", "normalLib"
         }
     }
 

@@ -9,6 +9,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        flavorDimensions "versionLib"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,14 +24,10 @@ android {
         }
     }
 
-    flavorDimensions "versionLib"
+    publishNonDefault true
     productFlavors {
-        commonLib {
-            dimension "versionLib"
-        }
-        normalLib {
-            dimension "versionLib"
-        }
+        commonLib {}
+        normalLib {}
     }
 
     compileOptions {
