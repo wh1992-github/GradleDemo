@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.example.mylibrary.Common;
 import com.example.mylibrary.Normal;
+import com.example.mylibrary.TestLib;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                     LogUtil.i(TAG, "onClick: pkgName = " + getPackageName());
                     LogUtil.i(TAG, "onClick: name = " + info.versionName + ", code = " + info.versionCode);
                     LogUtil.i(TAG, "onClick: name = " + getString(R.string.app_name) + ", label = " + getString(R.string.label_name));
-                    new Test().print();
+                    new TestApp().print();
                 } catch (PackageManager.NameNotFoundException e) {
                     LogUtil.e(TAG, "onClick: e = " + e.getMessage());
                 }
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn2:
                 new Common().testCommon();
                 new Normal().testNormal();
+                new TestLib().print();
                 break;
         }
     }

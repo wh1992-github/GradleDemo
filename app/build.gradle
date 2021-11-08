@@ -19,6 +19,7 @@ def getTime() {
 android {
     //noinspection GradleCompatible
     compileSdkVersion 30
+    buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "com.example.wh.myapplication"
         minSdkVersion 23
@@ -27,6 +28,9 @@ android {
         versionName "1.0"
         flavorDimensions "versionName"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //library多渠道编译
+        missingDimensionStrategy "versionLib", "commonLib"
+        missingDimensionStrategy "versionLib", "normalLib"
     }
     sourceSets {
         main {
@@ -78,7 +82,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '30.0.3'
 }
 
 def releaseTime() {

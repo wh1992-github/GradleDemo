@@ -2,7 +2,8 @@ apply plugin: 'com.android.library'
 
 android {
     //noinspection GradleCompatible
-    compileSdkVersion 28
+    compileSdkVersion 30
+    buildToolsVersion '30.0.3'
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 30
@@ -16,11 +17,25 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "versionLib"
+    productFlavors {
+        commonLib {
+            dimension "versionLib"
+        }
+        normalLib {
+            dimension "versionLib"
+        }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
