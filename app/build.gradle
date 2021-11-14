@@ -59,10 +59,12 @@ android {
 //    }
 
     productFlavors {
+        //多渠道打包
         common {
             applicationId "com.example.wh.myapplication.common"
-            manifestPlaceholders = [package_name: "com.example.wh.myapplication.common",
-                                    APP_NAME    : "@string/app_name"]
+            manifestPlaceholders = [package_name     : "com.example.wh.myapplication.common",
+                                    APP_NAME         : "@string/app_name",
+                                    APP_CHANNEL_VALUE: "commonChannel"]
             versionName "common"
             versionCode Integer.valueOf(getTime())
             //library多渠道编译:重新定义此属性，动态的获取lib module的当前flavor
@@ -70,8 +72,9 @@ android {
         }
         normal {
             applicationId "com.example.wh.myapplication.normal"
-            manifestPlaceholders = [package_name: "com.example.wh.myapplication.normal",
-                                    APP_NAME    : "@string/app_name"]
+            manifestPlaceholders = [package_name     : "com.example.wh.myapplication.normal",
+                                    APP_NAME         : "@string/app_name",
+                                    APP_CHANNEL_VALUE: "normalChannel"]
             versionName "normal"
             versionCode Integer.valueOf(getTime())
             //library多渠道编译:重新定义此属性，动态的获取lib module的当前flavor

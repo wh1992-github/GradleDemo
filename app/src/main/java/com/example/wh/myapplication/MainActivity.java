@@ -1,5 +1,6 @@
 package com.example.wh.myapplication;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.btn1:
                 try {
-                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
                     LogUtil.i(TAG, "onClick: pkgName = " + getPackageName());
                     LogUtil.i(TAG, "onClick: name = " + info.versionName + ", code = " + info.versionCode);
                     LogUtil.i(TAG, "onClick: name = " + getString(R.string.app_name) + ", label = " + getString(R.string.label_name));
@@ -42,7 +43,19 @@ public class MainActivity extends AppCompatActivity {
                 new Common().testCommon();
                 new Normal().testNormal();
                 new TestLib().print();
+                LogUtil.i(TAG, "onClick: channel = " + getChannel());
                 break;
         }
+    }
+
+    //读取渠道
+    private String getChannel() {
+        try {
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            return appInfo.metaData.getString("APP_CHANNEL");
+        } catch (PackageManager.NameNotFoundException e) {
+            LogUtil.i(TAG, "getChannel: e = " + e.getMessage());
+        }
+        return "";
     }
 }
