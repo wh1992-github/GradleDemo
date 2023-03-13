@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 new TestLib().print();
                 LogUtil.i(TAG, "onClick: channel = " + getChannel());
                 break;
+            default:
+                break;
         }
     }
 

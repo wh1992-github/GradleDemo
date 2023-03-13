@@ -88,8 +88,24 @@ android {
     }
 }
 
-def releaseTime() {
+static def releaseTime() {
     return new Date().format("yyyyMMdd-HH:mm:ss", TimeZone.getTimeZone("UTC"))
+}
+
+//在build结束后将build的文件copy到target中
+gradle.buildFinished {
+    copy {
+        //删除存在的
+        delete 'targetApk/'
+
+        from('build/outputs/apk/common/debug/app-common-debug.apk')
+        into('targetApk/')
+        rename('app-common-debug.apk', 'Common.apk')
+
+        from('build/outputs/apk/normal/debug/app-normal-debug.apk')
+        into('targetApk/')
+        rename('app-normal-debug.apk', 'Normal.apk')
+    }
 }
 
 //delete
@@ -101,14 +117,13 @@ task deleteDir(type: Delete) {
 task copyApk(type: Copy) {
     //删除存在的
     delete 'targetApk/'
+
     from("build/outputs/apk/common/debug/app-common-debug.apk")
     into("targetApk/")
-    //重命名
     rename('app-common-debug.apk', "common_${releaseTime()}.apk")
 
     from("build/outputs/apk/normal/debug/app-normal-debug.apk")
     into("targetApk/")
-    //重命名
     rename('app-normal-debug.apk', "normal_${releaseTime()}.apk")
 }
 
@@ -122,4 +137,23 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':mylibrary')
+}
+
+//Task的第一种声明方法
+task mTask1 {
+    doLast {
+        println "Hello，这是我声明的Task1"
+    }
+}
+//Task的第二种声明方法
+task(mTask2) {
+    doLast {
+        println "Hello，这是我声明的Task2"
+    }
+}
+//Task的第三种声明方法
+task('mTask3') {
+    doLast {
+        println "Hello，这是我声明的Task3"
+    }
 }
