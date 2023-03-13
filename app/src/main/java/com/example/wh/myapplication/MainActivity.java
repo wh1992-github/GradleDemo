@@ -4,9 +4,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+
+import android.support.v4.content.pm.PackageInfoCompat;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.mylibrary.Common;
 import com.example.mylibrary.Normal;
@@ -27,24 +29,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn1:
-                try {
-                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
-                    LogUtil.i(TAG, "onClick: pkgName = " + getPackageName());
-                    LogUtil.i(TAG, "onClick: name = " + info.versionName + ", code = " + info.versionCode);
-                    LogUtil.i(TAG, "onClick: name = " + getString(R.string.app_name) + ", label = " + getString(R.string.label_name));
-                    new TestApp().print();
-                } catch (PackageManager.NameNotFoundException e) {
-                    LogUtil.e(TAG, "onClick: e = " + e.getMessage());
-                }
-                break;
-            case R.id.btn2:
-                new Common().testCommon();
-                new Normal().testNormal();
-                new TestLib().print();
-                LogUtil.i(TAG, "onClick: channel = " + getChannel());
-                break;
+        int viewId = v.getId();
+        if (viewId == R.id.btn1) {
+            try {
+                PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
+                LogUtil.i(TAG, "onClick: pkgName = " + getPackageName());
+                LogUtil.i(TAG, "onClick: name = " + info.versionName + ", code = " + PackageInfoCompat.getLongVersionCode(info));
+                LogUtil.i(TAG, "onClick: name = " + getString(R.string.app_name) + ", label = " + getString(R.string.label_name));
+                new TestApp().print();
+            } catch (PackageManager.NameNotFoundException e) {
+                LogUtil.e(TAG, "onClick: e = " + e.getMessage());
+            }
+        } else if (viewId == R.id.btn2) {
+            new Common().testCommon();
+            new Normal().testNormal();
+            new TestLib().print();
+            LogUtil.i(TAG, "onClick: channel = " + getChannel());
         }
     }
 

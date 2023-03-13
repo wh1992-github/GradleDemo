@@ -1,12 +1,13 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.library'
 
 android {
-    //noinspection GradleCompatible
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    namespace 'com.example.mylibrary'
+    compileSdk 34
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         flavorDimensions "versionLib"
@@ -24,7 +25,6 @@ android {
         }
     }
 
-    publishNonDefault true
     productFlavors {
         commonLib {}
         normalLib {}
@@ -34,10 +34,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 def releaseTime() {
-    return new Date().format("yyyyMMdd-HH:mm:ss", TimeZone.getTimeZone("UTC"))
+    return new Date().format("yyyyMMdd-HHmmss", TimeZone.getTimeZone("Asia/Shanghai"))
 }
 
 //delete
@@ -45,29 +49,33 @@ task deleteDir(type: Delete) {
     delete "build/"
 }
 
-//Android Studio 4.0 生成 jar
-task exportJar(type: Copy) {
-    def fileName = "Jar_${android.defaultConfig.versionName}_${releaseTime()}"
-    //删除存在的
-    delete 'targetJar/'
-    //设置拷贝的文件(重中之重)
-    from('build/intermediates/packaged-classes/debug/classes.jar')
-    //打进jar包后的文件目录
-    into('targetJar/')
-    //include参数来设置过滤,classes.jar文件
-    //include('classes.jar')
-    //重命名
-    rename('classes.jar', "${fileName}.jar")
+// 导出所有 BuildVariant 的 JAR 和 AAR。
+def exportDir = file('targetJar')
 
-    fileName = "Aar_${android.defaultConfig.versionName}_${releaseTime()}"
-    from("build/outputs/aar/mylibrary-debug.aar")
-    into("targetJar/")
-    //重命名
-    rename('mylibrary-debug.aar', "${fileName}.aar")
+task exportJar(type: Copy) {
+    into(exportDir)
+    outputs.upToDateWhen { false }
+
+    // 只在执行 exportJar 时清理，避免配置其他 Gradle 任务时误删已有产物。
+    doFirst {
+        delete(exportDir)
+    }
 }
 
-//这里会触发真正对mylibaray的编译
-exportJar.dependsOn(build)
+android.libraryVariants.all { variant ->
+    def variantName = variant.name
+    def artifactName = "${variantName}_${android.defaultConfig.versionName}_${releaseTime()}"
+    def aarName = "${project.name}-${variant.flavorName}-${variant.buildType.name}.aar"
+
+    exportJar.dependsOn(variant.assembleProvider)
+
+    exportJar.from("$buildDir/intermediates/aar_main_jar/${variantName}/classes.jar") {
+        rename { "${artifactName}.jar" }
+    }
+    exportJar.from("$buildDir/outputs/aar/${aarName}") {
+        rename { "${artifactName}.aar" }
+    }
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
